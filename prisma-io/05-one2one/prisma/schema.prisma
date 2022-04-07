@@ -8,33 +8,35 @@ datasource db {
 }
 
 model Courses {
-  id            String   @id @default(uuid())
-  name          String   @unique
-  description   String?
-  duration      Int
-  created_at    DateTime @default(now())
-  teacher       Teachers @relation(fields: [fk_id_teacher], references: [id])
-  fk_id_teacher String   @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  duration    Int
+  created_at  DateTime @default(now())
 
-  teachersId String
   @@map("courses")
+  Teachers Teachers[]
 }
 
 model Modules {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String
-  created_at  DateTime @default(now())
+  id            String   @id @default(uuid())
+  name          String   @unique
+  description   String
+  created_at    DateTime @default(now())
+  teacher       Teachers @relation(fields: [teachersId], references: [id])
+  fk_id_teacher String
 
   @@map("modules")
+  teachersId String
 }
 
 model Teachers {
   id     String   @id @default(uuid())
   name   String   @unique
-  course Courses?
+  course Courses? @relation(fields: [coursesId], references: [id])
 
 
-  Courses Courses[]
   @@map("teachers")
+  Modules   Modules[]
+  coursesId String?
 }
